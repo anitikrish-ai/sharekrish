@@ -35,6 +35,7 @@ export function ItemEditor({
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const dialogRef = useRef<HTMLDivElement>(null)
+  const isSubmittingRef = useRef(false)
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -46,6 +47,7 @@ export function ItemEditor({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (saving || isSubmittingRef.current) return
     setError('')
     if (URL_TYPES.includes(type) && !url.trim()) {
       setError('This type needs a URL.')
@@ -55,6 +57,7 @@ export function ItemEditor({
       setError('Content cannot be empty.')
       return
     }
+    isSubmittingRef.current = true
     setSaving(true)
     try {
       await onSave({
@@ -70,6 +73,7 @@ export function ItemEditor({
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not save this item.')
     } finally {
+      isSubmittingRef.current = false
       setSaving(false)
     }
   }

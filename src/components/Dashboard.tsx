@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState, useCallback } from 'react'
+import { useEffect, useMemo, useState, useCallback, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Category, ClipItem, Collection, ItemType } from '@/lib/types'
 import {
@@ -29,6 +29,8 @@ import {
   IconPlus,
   IconAlertCircle,
   IconFolder,
+  IconCheck,
+  IconCornerDownLeft,
 } from './Icons'
 
 type Filter = 'all' | 'favorites' | 'pinned' | 'recent' | 'archive'
@@ -122,13 +124,106 @@ export function Dashboard({
 
   const categoryById = useMemo(() => new Map(categories.map((c) => [c.id, c])), [categories])
 
-  const handleSave = useCallback(async (input: ItemInput) => {
-    if (editing && editing !== 'new') {
-      const updated = await updateItem(supabase, editing.id, input)
-      setItems((prev) => prev.map((i) => (i.id === updated.id ? updated : i)))
+  // Duplicate prevention lock
+  const saveLockRef = useRef(false)
+
+  // Easy Mode State & Preference
+  const [easyMode, setEasyMode] = useState(false)
+  const [easyInput, setEasyInput] = useState('')
+  const [easySaving, setEasySaving] = useState(false)
+  const [easyToast, setEasyToast] = useState('')
+  const easyInputRef = useRef<HTMLInputElement>(null)
+
+  // Load Easy Mode preference from localStorage
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('cloud_clipboard_easy_mode')
+      if (saved !== null) {
+        setEasyMode(saved === 'true')
+      }
+    } catch {
+      // Ignore if localStorage unavailable
+    }
+  }, [])
+
+  const toggleEasyMode = useCallback(() => {
+    setEasyMode((prev) => {
+      const next = !prev
+      try {
+        localStorage.setItem('cloud_clipboard_easy_mode', String(next))
+      } catch {}
+      return next
+    })
+  }, [])
+
+  // Fast direct save in Easy Mode on Enter
+  const handleEasySubmit = useCallback(async (e?: React.FormEvent) => {
+    if (e) e.preventDefault()
+    const val = easyInput.trim()
+    if (!val || easySaving || saveLockRef.current) return
+
+    // Auto-detect type based on input
+    const isUrl = /^https?:\/\//i.test(val)
+    const isSnippet = val.includes('\n') || (/[{};=><()[\]]/.test(val) && val.length > 20)
+    const detectedType: ItemType = isUrl ? 'link' : isSnippet ? 'snippet' : 'text'
+
+    let derivedTitle = ''
+    if (isUrl) {
+      try {
+        derivedTitle = new URL(val).hostname.replace(/^www\./, '')
+      } catch {
+        derivedTitle = 'Link'
+      }
     } else {
-      const created = await createItem(supabase, userId, input)
-      setItems((prev) => [created, ...prev])
+      derivedTitle = val.split('\n')[0].slice(0, 40)
+    }
+
+    saveLockRef.current = true
+    setEasySaving(true)
+    setEasyInput('') // Instant reset for 60fps responsiveness
+
+    try {
+      const created = await createItem(supabase, userId, {
+        type: detectedType,
+        title: derivedTitle,
+        content: val,
+        url: isUrl ? val : null,
+        category_id: categoryId || null,
+      })
+
+      setItems((prev) => {
+        if (prev.some((i) => i.id === created.id)) return prev
+        return [created, ...prev]
+      })
+
+      setEasyToast('Item saved instantly')
+      setTimeout(() => setEasyToast(''), 1800)
+    } catch {
+      setEasyInput(val) // Restore input on failure
+      setSyncError('Could not save item — check connection.')
+    } finally {
+      saveLockRef.current = false
+      setEasySaving(false)
+      easyInputRef.current?.focus()
+    }
+  }, [easyInput, easySaving, supabase, userId, categoryId])
+
+  const handleSave = useCallback(async (input: ItemInput) => {
+    if (saveLockRef.current) return
+    saveLockRef.current = true
+    try {
+      if (editing && editing !== 'new') {
+        const updated = await updateItem(supabase, editing.id, input)
+        setItems((prev) => prev.map((i) => (i.id === updated.id ? updated : i)))
+      } else {
+        const created = await createItem(supabase, userId, input)
+        setItems((prev) => {
+          if (prev.some((i) => i.id === created.id)) return prev
+          return [created, ...prev]
+        })
+      }
+    } finally {
+      saveLockRef.current = false
     }
   }, [editing, supabase, userId])
 
@@ -192,12 +287,31 @@ export function Dashboard({
 
         {/* Top actions */}
         <div className="flex items-center gap-2 flex-shrink-0">
+          {/* Easy Mode Toggle Button */}
+          <button
+            type="button"
+            onClick={toggleEasyMode}
+            aria-pressed={easyMode}
+            className={`rounded-xl px-2.5 sm:px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5 transition-all active:scale-95 border ${
+              easyMode
+                ? 'bg-amber-400/15 border-amber-400/40 text-amber-300 shadow-[0_0_15px_rgba(251,191,36,0.15)]'
+                : 'glass text-slate-400 hover:text-white border-white/[0.08]'
+            }`}
+            title="Toggle Easy Mode (instant Enter-to-save)"
+          >
+            <IconZap size={13} className={easyMode ? 'text-amber-400' : 'text-slate-400'} />
+            <span className="hidden xs:inline">Easy</span>
+            <span className={`text-[10px] px-1.5 py-0.2 rounded-md font-mono ${easyMode ? 'bg-amber-400/25 text-amber-200' : 'bg-white/[0.06] text-slate-500'}`}>
+              {easyMode ? 'ON' : 'OFF'}
+            </span>
+          </button>
+
           <button
             onClick={() => setShowCodes(true)}
-            className="glass glass-interactive rounded-xl px-3.5 py-1.5 text-xs font-semibold text-slate-200 border-white/[0.1] hover:border-sky-400/40 flex items-center gap-1.5 shadow-sm"
+            className="glass glass-interactive rounded-xl px-3 py-1.5 text-xs font-semibold text-slate-200 border-white/[0.1] hover:border-sky-400/40 flex items-center gap-1.5 shadow-sm"
           >
             <IconShare size={13} className="text-sky-400" />
-            <span>Share</span>
+            <span className="hidden sm:inline">Share</span>
           </button>
           <button
             onClick={handleSignOut}
@@ -209,6 +323,46 @@ export function Dashboard({
           </button>
         </div>
       </header>
+
+      {/* Easy Mode Instant Enter-to-Save Bar */}
+      {easyMode && (
+        <section className="mb-6 animate-scale-pop">
+          <form onSubmit={handleEasySubmit} className="relative flex items-center">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-amber-400 flex items-center pointer-events-none">
+              <IconZap size={16} />
+            </div>
+            <input
+              ref={easyInputRef}
+              type="text"
+              value={easyInput}
+              onChange={(e) => setEasyInput(e.target.value)}
+              placeholder="Easy Mode: Type or paste & hit Enter to save…"
+              className="w-full rounded-2xl bg-black/50 border border-amber-400/35 pl-10 pr-24 py-3 text-sm text-slate-100 placeholder:text-slate-500 outline-none focus:border-amber-400/70 focus:shadow-[0_0_25px_rgba(251,191,36,0.2)] transition-all"
+            />
+            <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+              <span className="hidden sm:inline-flex items-center gap-1 text-[10px] text-amber-300/80 font-mono bg-amber-400/10 px-2 py-1 rounded-lg border border-amber-400/20">
+                <span>Enter</span>
+                <IconCornerDownLeft size={10} />
+              </span>
+              <button
+                type="submit"
+                disabled={!easyInput.trim() || easySaving}
+                aria-label="Save item instantly"
+                className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 text-xs font-bold shadow-sm active:scale-95 disabled:opacity-40 transition-all flex items-center gap-1"
+              >
+                <span>Save</span>
+                <IconCornerDownLeft size={12} strokeWidth={2.5} />
+              </button>
+            </div>
+          </form>
+          {easyToast && (
+            <p className="mt-2 text-xs text-emerald-400 flex items-center gap-1.5 animate-fade-in font-medium px-2">
+              <IconCheck size={13} strokeWidth={2.5} />
+              <span>{easyToast}</span>
+            </p>
+          )}
+        </section>
+      )}
 
       {/* Sync Error Notice */}
       {syncError && (
@@ -337,7 +491,14 @@ export function Dashboard({
 
       {/* Prominent High-End Floating Action Button (+) */}
       <button
-        onClick={() => openNewItem('text')}
+        onClick={() => {
+          if (easyMode) {
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+            easyInputRef.current?.focus()
+          } else {
+            openNewItem('text')
+          }
+        }}
         aria-label="Add new item"
         className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-5 sm:right-8 w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-400 via-sky-500 to-teal-400 text-slate-950 shadow-[0_10px_35px_rgba(56,189,248,0.55)] flex items-center justify-center active:scale-90 hover:scale-105 transition-all z-40 border border-white/30"
       >

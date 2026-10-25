@@ -93,12 +93,12 @@ export function IconX({ size = 18, strokeWidth = 2, className = '', ...props }: 
 export function IconStar({ size = 18, strokeWidth = 2, filled = false, className = '', ...props }: IconProps & { filled?: boolean }) {
   return (
     <svg
+      {...defaultProps}
       width={size}
       height={size}
       strokeWidth={strokeWidth}
       className={className}
       fill={filled ? 'currentColor' : 'none'}
-      {...defaultProps}
       {...props}
     >
       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
@@ -293,3 +293,22 @@ export function IconKey({ size = 18, strokeWidth = 2, className = '', ...props }
     </svg>
   )
 }
+
+export function IconCornerDownLeft({ size = 18, strokeWidth = 2, className = '', ...props }: IconProps) {
+  return (
+    <svg width={size} height={size} strokeWidth={strokeWidth} className={className} {...defaultProps} {...props}>
+      <polyline points="9 10 4 15 9 20" />
+      <path d="M20 4v7a4 4 0 0 1-4 4H4" />
+    </svg>
+  )
+}
+
+export function IconSend({ size = 18, strokeWidth = 2, className = '', ...props }: IconProps) {
+  return (
+    <svg width={size} height={size} strokeWidth={strokeWidth} className={className} {...defaultProps} {...props}>
+      <path d="m22 2-7 20-4-9-9-4Z" />
+      <path d="M22 2 11 13" />
+    </svg>
+  )
+}
+

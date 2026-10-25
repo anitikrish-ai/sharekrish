@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { IconClipboard } from '@/components/Icons'
 
@@ -8,6 +8,15 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      if (params.get('error') === 'not_owner') {
+        setError('Only the designated owner email can access this clipboard.')
+      }
+    }
+  }, [])
 
   async function sendLink(e: React.FormEvent) {
     e.preventDefault()

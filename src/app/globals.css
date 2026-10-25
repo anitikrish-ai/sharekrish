@@ -40,7 +40,6 @@ body {
     inset 0 1px 0 rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  contain: paint;
   transform: translateZ(0);
 }
 
@@ -53,7 +52,6 @@ body {
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  contain: paint;
   transform: translateZ(0);
 }
 

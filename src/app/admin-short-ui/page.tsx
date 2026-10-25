@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { fetchAll } from '@/lib/queries'
 import { Dashboard } from '@/components/Dashboard'
+import type { Category, ClipItem, Collection } from '@/lib/types'
 
 // Route protection is enforced twice, deliberately: middleware.ts bounces
 // unauthenticated requests before this page even runs (the real security
@@ -17,7 +18,18 @@ export default async function AdminPage() {
     redirect('/login')
   }
 
-  const { items, categories, collections } = await fetchAll(supabase)
+  let items: ClipItem[] = []
+  let categories: Category[] = []
+  let collections: Collection[] = []
+
+  try {
+    const data = await fetchAll(supabase)
+    items = data.items
+    categories = data.categories
+    collections = data.collections
+  } catch (err) {
+    console.error('Initial data fetch notice:', err)
+  }
 
   return (
     <Dashboard
@@ -29,3 +41,4 @@ export default async function AdminPage() {
     />
   )
 }
+
