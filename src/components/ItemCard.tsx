@@ -76,7 +76,7 @@ export function ItemCard({
                 onClick={() => onToggle(item.id, 'is_favorite', !item.is_favorite)}
                 aria-pressed={item.is_favorite}
                 aria-label={item.is_favorite ? 'Remove from favorites' : 'Add to favorites'}
-                className="rounded-lg px-2 py-1 text-xs hover:bg-white/10"
+                className="rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center text-xs hover:bg-white/10"
               >
                 {item.is_favorite ? '★' : '☆'}
               </button>
@@ -84,28 +84,28 @@ export function ItemCard({
                 onClick={() => onToggle(item.id, 'is_pinned', !item.is_pinned)}
                 aria-pressed={item.is_pinned}
                 aria-label={item.is_pinned ? 'Unpin' : 'Pin'}
-                className="rounded-lg px-2 py-1 text-xs hover:bg-white/10"
+                className="rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center text-xs hover:bg-white/10"
               >
                 📌
               </button>
               <button
                 onClick={() => onEdit?.(item)}
                 aria-label="Edit item"
-                className="rounded-lg px-2 py-1 text-xs hover:bg-white/10"
+                className="rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center text-xs hover:bg-white/10"
               >
                 ✎
               </button>
               <button
                 onClick={() => onToggle(item.id, 'is_archived', !item.is_archived)}
                 aria-label={item.is_archived ? 'Unarchive' : 'Archive'}
-                className="rounded-lg px-2 py-1 text-xs hover:bg-white/10"
+                className="rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center text-xs hover:bg-white/10"
               >
                 {item.is_archived ? '↩' : '🗄'}
               </button>
               <button
                 onClick={() => onDelete?.(item.id)}
                 aria-label="Delete item"
-                className="rounded-lg px-2 py-1 text-xs text-rose-300 hover:bg-rose-500/10"
+                className="rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center text-xs text-rose-300 hover:bg-rose-500/10"
               >
                 ✕
               </button>

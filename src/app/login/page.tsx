@@ -66,6 +66,12 @@ export default function LoginPage() {
           Only the configured owner account can sign in here. Looking for shared access?{' '}
           <a href="/view" className="underline underline-offset-2 hover:text-white/70">Open guest view</a>.
         </p>
+
+        <p className="mt-3 text-[11px] text-white/30">
+          <a href="/privacy" className="underline underline-offset-2 hover:text-white/60">Privacy</a>
+          {' · '}
+          <a href="/terms" className="underline underline-offset-2 hover:text-white/60">Terms</a>
+        </p>
       </div>
     </main>
   )

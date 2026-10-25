@@ -9,13 +9,16 @@ export const metadata: Metadata = {
   icons: {
     icon: [{ url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' }],
     apple: [{ url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' }],
+    shortcut: [{ url: '/icons/icon-192.png' }],
   },
+  // Private, auth-gated personal data — never indexed.
+  robots: { index: false, follow: false, nocache: true },
 }
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
+  // No maximumScale lock — pinch-zoom must stay usable for accessibility.
   themeColor: '#0b0d12',
 }
 

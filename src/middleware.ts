@@ -8,11 +8,18 @@ import { NextResponse, type NextRequest } from 'next/server'
 // OWNER_EMAIL check in the auth callback). Anyone else's token, or no
 // token, is bounced to /login before any admin page or admin API route runs.
 export async function middleware(request: NextRequest) {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  if (!url || !anonKey) {
+    return NextResponse.json({ error: 'Supabase environment variables not configured' }, { status: 500 })
+  }
+
   let response = NextResponse.next({ request: { headers: request.headers } })
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    url,
+    anonKey,
     {
       cookies: {
         get(name: string) {

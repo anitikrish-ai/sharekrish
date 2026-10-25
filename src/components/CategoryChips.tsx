@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import type { Category } from '@/lib/types'
 
-const PALETTE = ['#7dd3fc', '#c084fc', '#fda4af', '#86efac', '#fde047', '#fdba74']
+const PALETTE = ['#7dd3fc', '#5eead4', '#fda4af', '#86efac', '#fde047', '#fdba74']
 
 export function CategoryChips({
   categories,
