@@ -5,6 +5,7 @@ import type { Category, ClipItem } from '@/lib/types'
 import { Glass } from '@/components/Glass'
 import { ItemCard } from '@/components/ItemCard'
 import { SearchBar } from '@/components/SearchBar'
+import { IconClipboard, IconClock } from '@/components/Icons'
 
 type ViewState =
   | { status: 'enter-code' }
@@ -128,17 +129,18 @@ export default function GuestViewPage() {
       <header className="flex items-center justify-between mb-6 pt-1">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-400 via-sky-500 to-teal-400 p-[1px] shadow-[0_0_15px_rgba(56,189,248,0.3)] flex-shrink-0">
-            <div className="w-full h-full rounded-xl bg-[#090d16] flex items-center justify-center text-sm">
-              📋
+            <div className="w-full h-full rounded-xl bg-[#090d16] flex items-center justify-center">
+              <IconClipboard size={18} className="text-sky-400" strokeWidth={2.2} />
             </div>
           </div>
           <div>
             <h1 className="text-base font-bold tracking-tight text-white">Shared Clipboard</h1>
-            <p className="text-[11px] text-white/40">Guest Read-Only Access</p>
+            <p className="text-[11px] text-slate-400">Guest Read-Only Access</p>
           </div>
         </div>
-        <Glass className="px-3 py-1.5 text-xs text-sky-200 border-sky-400/30 bg-sky-500/10 font-medium">
-          ⏳ {minsLeft}m {secsLeft}s left
+        <Glass className="px-3 py-1.5 text-xs text-sky-200 border-sky-400/30 bg-sky-500/10 font-medium flex items-center gap-1.5">
+          <IconClock size={13} className="text-sky-300" />
+          <span>{minsLeft}m {secsLeft}s left</span>
         </Glass>
       </header>
 

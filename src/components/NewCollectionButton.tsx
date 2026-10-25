@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { IconPlus } from './Icons'
 
 export function NewCollectionButton({ onCreate }: { onCreate: (name: string) => Promise<void> }) {
   const [adding, setAdding] = useState(false)
@@ -24,9 +25,10 @@ export function NewCollectionButton({ onCreate }: { onCreate: (name: string) => 
     return (
       <button
         onClick={() => setAdding(true)}
-        className="text-[11px] px-2.5 py-1 rounded-full border border-dashed border-white/20 text-white/45 hover:bg-white/5"
+        className="text-[11px] px-2.5 py-1 rounded-xl border border-dashed border-white/20 text-slate-400 hover:text-white hover:border-white/40 active:scale-95 transition-all inline-flex items-center gap-1"
       >
-        + Collection
+        <IconPlus size={11} strokeWidth={2.5} />
+        <span>Collection</span>
       </button>
     )
   }
@@ -38,8 +40,8 @@ export function NewCollectionButton({ onCreate }: { onCreate: (name: string) => 
         value={name}
         onChange={(e) => setName(e.target.value)}
         onBlur={() => !name && setAdding(false)}
-        placeholder="Collection name"
-        className="text-[11px] bg-black/30 border border-white/15 rounded-full px-2.5 py-1 outline-none focus-visible:border-sky-400/60 w-28"
+        placeholder="Collection name…"
+        className="text-[11px] bg-slate-900 border border-sky-400/50 text-white rounded-xl px-2.5 py-1 outline-none w-28 shadow-[0_0_15px_rgba(56,189,248,0.2)]"
       />
     </form>
   )

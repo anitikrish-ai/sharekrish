@@ -5,6 +5,7 @@ import type { Category, ClipItem, Collection, ItemType } from '@/lib/types'
 import { Glass } from './Glass'
 import { TYPE_LABEL } from './itemMeta'
 import type { ItemInput } from '@/lib/queries'
+import { IconX } from './Icons'
 
 const TYPES: ItemType[] = ['text', 'link', 'snippet', 'shortcut', 'image', 'video', 'music']
 const URL_TYPES: ItemType[] = ['link', 'image', 'video', 'music']
@@ -92,9 +93,9 @@ export function ItemEditor({
             <button
               onClick={onClose}
               aria-label="Close"
-              className="w-8 h-8 rounded-full flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 active:scale-90 transition-all"
+              className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 active:scale-90 transition-all"
             >
-              ✕
+              <IconX size={16} />
             </button>
           </div>
 

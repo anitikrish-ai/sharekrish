@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { IconClipboard } from '@/components/Icons'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -29,8 +30,8 @@ export default function LoginPage() {
     <main className="min-h-dvh flex items-center justify-center p-4 sm:p-6">
       <div className="glass glass-strong w-full max-w-sm p-6 sm:p-8 animate-scale-pop relative overflow-hidden">
         <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-400 via-sky-500 to-teal-400 p-[1px] shadow-[0_0_25px_rgba(56,189,248,0.35)] mb-4">
-          <div className="w-full h-full rounded-2xl bg-[#090d16] flex items-center justify-center text-xl">
-            📋
+          <div className="w-full h-full rounded-2xl bg-[#090d16] flex items-center justify-center">
+            <IconClipboard size={22} className="text-sky-400" strokeWidth={2.2} />
           </div>
         </div>
         <h1 className="text-xl font-bold tracking-tight mb-1 text-white">Cloud Clipboard</h1>
