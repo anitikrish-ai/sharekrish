@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import type { AccessCode, Category } from '@/lib/types'
 import { Glass } from './Glass'
 
+import { IconX, IconKey } from './Icons'
+
 function timeLeft(expiresAt: string): string {
   const ms = new Date(expiresAt).getTime() - Date.now()
   if (ms <= 0) return 'expired'
@@ -73,8 +75,13 @@ export function AccessCodePanel({ categories, onClose }: { categories: Category[
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs p-0 sm:p-4 animate-fade-in" role="dialog" aria-modal>
       <Glass strong className="w-full sm:max-w-lg max-h-[88dvh] overflow-y-auto rounded-t-3xl sm:rounded-2xl p-5 sm:p-6 animate-sheet-up sm:animate-scale-pop shadow-2xl border-white/20 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
         <div className="flex items-center justify-between mb-4 pb-2 border-b border-white/10">
-          <h2 className="text-base sm:text-lg font-semibold tracking-tight text-white/95">Guest access</h2>
-          <button onClick={onClose} aria-label="Close" className="w-8 h-8 rounded-full flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 active:scale-90 transition-all">✕</button>
+          <div className="flex items-center gap-2">
+            <IconKey size={18} className="text-sky-400" />
+            <h2 className="text-base sm:text-lg font-semibold tracking-tight text-white/95">Guest access</h2>
+          </div>
+          <button onClick={onClose} aria-label="Close" className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 active:scale-90 transition-all">
+            <IconX size={16} />
+          </button>
         </div>
 
         <form onSubmit={createCode} className="space-y-3 mb-6">
