@@ -27,13 +27,18 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-dvh flex items-center justify-center p-4 sm:p-6">
-      <div className="glass glass-strong w-full max-w-sm p-6 sm:p-8 animate-scale-pop">
-        <h1 className="text-xl font-semibold tracking-tight mb-1 text-white/95">Cloud Clipboard</h1>
-        <p className="text-xs sm:text-sm text-white/60 mb-6">Sign in with your owner email to manage your clipboard.</p>
+      <div className="glass glass-strong w-full max-w-sm p-6 sm:p-8 animate-scale-pop relative overflow-hidden">
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-400 via-sky-500 to-teal-400 p-[1px] shadow-[0_0_25px_rgba(56,189,248,0.35)] mb-4">
+          <div className="w-full h-full rounded-2xl bg-[#090d16] flex items-center justify-center text-xl">
+            📋
+          </div>
+        </div>
+        <h1 className="text-xl font-bold tracking-tight mb-1 text-white">Cloud Clipboard</h1>
+        <p className="text-xs sm:text-sm text-white/55 mb-6">Sign in with your owner email to access your clips.</p>
 
         {status === 'sent' ? (
-          <p className="text-xs sm:text-sm text-sky-300 bg-sky-400/10 border border-sky-400/20 rounded-xl p-3.5 animate-fade-in">
-            Check <strong>{email}</strong> for a sign-in link.
+          <p className="text-xs sm:text-sm text-emerald-300 bg-emerald-500/10 border border-emerald-400/20 rounded-xl p-3.5 animate-fade-in">
+            Check <strong>{email}</strong> for your magic sign-in link.
           </p>
         ) : (
           <form onSubmit={sendLink} className="space-y-3">

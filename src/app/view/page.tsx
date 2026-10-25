@@ -124,11 +124,21 @@ export default function GuestViewPage() {
     : state.items
 
   return (
-    <div className="min-h-dvh max-w-3xl mx-auto px-3.5 sm:px-6 py-4 sm:py-6 pb-12">
-      <header className="flex items-center justify-between mb-5 pt-1">
-        <h1 className="text-base sm:text-lg font-semibold tracking-tight text-white/95">Shared clipboard</h1>
-        <Glass className="px-3 py-1.5 text-xs text-white/60">
-          {minsLeft}m {secsLeft}s left · read-only
+    <div className="min-h-dvh max-w-3xl mx-auto px-4 sm:px-6 py-5 sm:py-7 pb-16">
+      <header className="flex items-center justify-between mb-6 pt-1">
+        <div className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-400 via-sky-500 to-teal-400 p-[1px] shadow-[0_0_15px_rgba(56,189,248,0.3)] flex-shrink-0">
+            <div className="w-full h-full rounded-xl bg-[#090d16] flex items-center justify-center text-sm">
+              📋
+            </div>
+          </div>
+          <div>
+            <h1 className="text-base font-bold tracking-tight text-white">Shared Clipboard</h1>
+            <p className="text-[11px] text-white/40">Guest Read-Only Access</p>
+          </div>
+        </div>
+        <Glass className="px-3 py-1.5 text-xs text-sky-200 border-sky-400/30 bg-sky-500/10 font-medium">
+          ⏳ {minsLeft}m {secsLeft}s left
         </Glass>
       </header>
 

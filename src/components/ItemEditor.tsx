@@ -11,18 +11,20 @@ const URL_TYPES: ItemType[] = ['link', 'image', 'video', 'music']
 
 export function ItemEditor({
   item,
+  initialType = 'text',
   categories,
   collections,
   onSave,
   onClose,
 }: {
   item: ClipItem | null
+  initialType?: ItemType
   categories: Category[]
   collections: Collection[]
   onSave: (input: ItemInput) => Promise<void>
   onClose: () => void
 }) {
-  const [type, setType] = useState<ItemType>(item?.type ?? 'text')
+  const [type, setType] = useState<ItemType>(item?.type ?? initialType)
   const [title, setTitle] = useState(item?.title ?? '')
   const [content, setContent] = useState(item?.content ?? '')
   const [url, setUrl] = useState(item?.url ?? '')

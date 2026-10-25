@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import type { Category, ClipItem, Collection } from '@/lib/types'
+import type { Category, ClipItem, Collection, ItemType } from '@/lib/types'
 import {
   createCategory, createCollection, createItem, deleteItem, toggleField, updateItem,
 } from '@/lib/queries'
@@ -17,6 +17,14 @@ import { AccessCodePanel } from './AccessCodePanel'
 import { NewCollectionButton } from './NewCollectionButton'
 
 type Filter = 'all' | 'favorites' | 'pinned' | 'recent' | 'archive'
+
+const FILTER_CONFIG: { id: Filter; label: string; icon: string }[] = [
+  { id: 'all', label: 'All', icon: '🌐' },
+  { id: 'favorites', label: 'Favorites', icon: '★' },
+  { id: 'pinned', label: 'Pinned', icon: '📌' },
+  { id: 'recent', label: 'Recent', icon: '🕒' },
+  { id: 'archive', label: 'Archive', icon: '🗄️' },
+]
 
 export function Dashboard({
   userId,
@@ -39,13 +47,11 @@ export function Dashboard({
   const [categoryId, setCategoryId] = useState<string | null>(null)
   const [search, setSearch] = useState('')
   const [editing, setEditing] = useState<ClipItem | 'new' | null>(null)
+  const [editingType, setEditingType] = useState<ItemType>('text')
   const [showCodes, setShowCodes] = useState(false)
   const [syncError, setSyncError] = useState('')
 
-  // Realtime: every item change (from this device or the other trusted
-  // phone) is pushed in, so both stay in sync without polling. Scoped by
-  // RLS already — `filter: user_id=eq.${userId}` just avoids subscribing
-  // to postgres_changes noise for rows we couldn't read anyway.
+  // Supabase Realtime Sync
   useEffect(() => {
     const channel = supabase
       .channel('items-sync')
@@ -65,7 +71,7 @@ export function Dashboard({
       )
       .subscribe((status) => {
         if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
-          setSyncError('Live sync is unavailable right now — changes still save, but the other device may not update instantly.')
+          setSyncError('Live sync is temporarily offline — changes will save, but other devices may need a refresh.')
         } else if (status === 'SUBSCRIBED') {
           setSyncError('')
         }
@@ -112,22 +118,22 @@ export function Dashboard({
   }, [editing, supabase, userId])
 
   const handleDelete = useCallback(async (id: string) => {
-    if (!confirm('Delete this item? This can’t be undone.')) return
-    setItems((prev) => prev.filter((i) => i.id !== id)) // optimistic
+    if (!confirm('Delete this item? This cannot be undone.')) return
+    setItems((prev) => prev.filter((i) => i.id !== id))
     try {
       await deleteItem(supabase, id)
     } catch {
-      setSyncError('Could not delete that item — it may already be gone.')
+      setSyncError('Could not delete that item — check your connection.')
     }
   }, [supabase])
 
   const handleToggle = useCallback(async (id: string, field: 'is_favorite' | 'is_pinned' | 'is_archived', value: boolean) => {
-    setItems((prev) => prev.map((i) => (i.id === id ? { ...i, [field]: value } : i))) // optimistic
+    setItems((prev) => prev.map((i) => (i.id === id ? { ...i, [field]: value } : i)))
     try {
       await toggleField(supabase, id, field, value)
     } catch {
-      setItems((prev) => prev.map((i) => (i.id === id ? { ...i, [field]: !value } : i))) // revert
-      setSyncError('That change didn’t save — check your connection.')
+      setItems((prev) => prev.map((i) => (i.id === id ? { ...i, [field]: !value } : i)))
+      setSyncError('That change did not save — check your connection.')
     }
   }, [supabase])
 
@@ -138,76 +144,107 @@ export function Dashboard({
 
   const quickPool = useMemo(() => items.filter((i) => !i.is_archived), [items])
 
+  function openNewItem(type: ItemType = 'text') {
+    setEditingType(type)
+    setEditing('new')
+  }
+
   return (
-    <div className="min-h-dvh max-w-3xl mx-auto px-3.5 sm:px-6 py-4 sm:py-6 pb-28">
-      {/* App Header */}
-      <header className="flex items-center justify-between mb-5 pt-1">
-        <div className="min-w-0 pr-2">
-          <h1 className="text-base sm:text-lg font-semibold tracking-tight text-white/95 truncate">
-            Cloud Clipboard
-          </h1>
-          <p className="text-[11px] sm:text-xs text-white/45 truncate">{userEmail}</p>
+    <div className="min-h-dvh max-w-3xl mx-auto px-4 sm:px-6 py-5 sm:py-7 pb-28">
+      {/* Brand Header */}
+      <header className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-sky-400 via-sky-500 to-teal-400 p-[1px] shadow-[0_0_20px_rgba(56,189,248,0.35)] flex-shrink-0">
+            <div className="w-full h-full rounded-2xl bg-[#090d16] flex items-center justify-center text-lg">
+              📋
+            </div>
+          </div>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <h1 className="text-base sm:text-lg font-bold tracking-tight text-white">
+                Cloud Clipboard
+              </h1>
+              <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Synced
+              </span>
+            </div>
+            <p className="text-[11px] text-white/45 truncate max-w-[190px] sm:max-w-none">
+              {userEmail}
+            </p>
+          </div>
         </div>
-        <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+
+        {/* Top actions */}
+        <div className="flex items-center gap-2 flex-shrink-0">
           <button
             onClick={() => setShowCodes(true)}
-            className="glass glass-interactive rounded-full px-3 py-1.5 sm:py-2 text-xs font-medium text-white/85"
+            className="glass glass-interactive rounded-xl px-3.5 py-1.5 text-xs font-semibold text-white/90 border-white/15 hover:border-sky-400/40 flex items-center gap-1.5 shadow-sm"
           >
-            Share
+            <span>🔗</span>
+            <span>Share</span>
           </button>
           <button
             onClick={handleSignOut}
-            className="rounded-full px-2.5 py-1.5 sm:py-2 text-xs text-white/45 hover:text-white/80 hover:bg-white/5 active:scale-95 transition-all"
+            aria-label="Sign out"
+            className="rounded-xl px-2.5 py-1.5 text-xs text-white/40 hover:text-white/80 hover:bg-white/5 active:scale-95 transition-all"
           >
             Sign out
           </button>
         </div>
       </header>
 
+      {/* Sync Error Notice */}
       {syncError && (
-        <Glass className="mb-4 px-3.5 py-2.5 text-xs text-amber-200 border-amber-300/25 bg-amber-500/10 animate-fade-in">
-          {syncError}
+        <Glass className="mb-5 px-4 py-3 text-xs text-amber-200 border-amber-400/30 bg-amber-500/10 animate-fade-in flex items-center gap-2">
+          <span>⚠️</span>
+          <span>{syncError}</span>
         </Glass>
       )}
 
-      {/* Quick Access */}
-      <section className="mb-5">
-        <div className="flex items-center justify-between mb-2">
-          <h2 className="text-[11px] uppercase tracking-wider font-semibold text-white/40">
-            Quick Access
+      {/* Quick Access Section */}
+      <section className="mb-6">
+        <div className="flex items-center justify-between mb-2.5">
+          <h2 className="text-[11px] uppercase tracking-wider font-bold text-white/50 flex items-center gap-1.5">
+            <span>⚡</span>
+            <span>Quick Access</span>
           </h2>
-          <span className="text-[10px] text-white/35">Tap to copy</span>
+          <span className="text-[11px] text-white/40">Tap tile to copy</span>
         </div>
-        <QuickGrid items={quickPool} />
+        <QuickGrid items={quickPool} onQuickCreate={openNewItem} />
       </section>
 
-      {/* Search Input */}
-      <section className="mb-3.5">
+      {/* Search Bar */}
+      <section className="mb-4">
         <SearchBar value={search} onChange={setSearch} />
       </section>
 
-      {/* Filter Tabs - horizontally scrollable without breaking on phone */}
-      <section className="mb-3.5 overflow-x-auto no-scrollbar -mx-3.5 px-3.5 sm:mx-0 sm:px-0">
+      {/* Filter Segmented Control */}
+      <section className="mb-4 overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
         <div className="flex items-center gap-1.5 min-w-max pb-0.5">
-          {(['all', 'favorites', 'pinned', 'recent', 'archive'] as Filter[]).map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              aria-pressed={filter === f}
-              className={`text-xs px-3 py-1.5 rounded-full border capitalize transition-all active:scale-95 ${
-                filter === f
-                  ? 'bg-sky-400/20 border-sky-400/40 text-sky-100 font-medium'
-                  : 'border-white/10 text-white/55 hover:bg-white/5 hover:text-white/80'
-              }`}
-            >
-              {f}
-            </button>
-          ))}
+          {FILTER_CONFIG.map(({ id, label, icon }) => {
+            const isActive = filter === id
+            return (
+              <button
+                key={id}
+                onClick={() => setFilter(id)}
+                aria-pressed={isActive}
+                className={`text-xs px-3.5 py-2 rounded-xl border transition-all active:scale-95 flex items-center gap-1.5 ${
+                  isActive
+                    ? 'bg-sky-500/20 border-sky-400/50 text-sky-100 font-semibold shadow-[0_0_15px_rgba(56,189,248,0.2)]'
+                    : 'glass text-white/60 hover:text-white hover:border-white/20'
+                }`}
+              >
+                <span className="text-xs">{icon}</span>
+                <span>{label}</span>
+              </button>
+            )
+          })}
         </div>
       </section>
 
-      {/* Category Chips - mobile wrap */}
-      <section className="mb-2">
+      {/* Category Chips Bar */}
+      <section className="mb-3">
         <CategoryChips
           categories={categories}
           activeId={categoryId}
@@ -221,13 +258,13 @@ export function Dashboard({
 
       {/* Collections Row */}
       {collections.length > 0 && (
-        <section className="mb-4 flex flex-wrap items-center gap-1.5">
+        <section className="mb-5 flex flex-wrap items-center gap-1.5">
           {collections.map((c) => (
             <span
               key={c.id}
-              className="text-[11px] px-2.5 py-1 rounded-full border border-white/10 text-white/45 bg-white/[0.02]"
+              className="text-[11px] px-2.5 py-1 rounded-xl border border-white/10 text-white/50 bg-white/[0.03]"
             >
-              {c.name}
+              📂 {c.name}
             </span>
           ))}
           <NewCollectionButton
@@ -239,12 +276,34 @@ export function Dashboard({
         </section>
       )}
 
-      {/* Main Items Grid */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+      {/* Main Items Display / Empty State */}
+      <section className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {visible.length === 0 ? (
-          <Glass className="col-span-full p-8 text-center text-sm text-white/40">
-            {search.trim() ? 'No items match your search.' : 'Nothing here yet. Tap + to add an item.'}
-          </Glass>
+          <div className="col-span-full">
+            <div className="glass p-8 sm:p-10 text-center flex flex-col items-center justify-center gap-3 border-white/10 relative overflow-hidden">
+              <div className="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-400/20 flex items-center justify-center text-2xl mb-1 shadow-[0_0_30px_rgba(56,189,248,0.15)]">
+                ✨
+              </div>
+              <h3 className="text-base font-semibold text-white">
+                {search.trim() ? 'No matching items found' : 'Your clipboard is empty'}
+              </h3>
+              <p className="text-xs text-white/50 max-w-sm leading-relaxed">
+                {search.trim()
+                  ? 'Try searching for a different keyword or clear your filter.'
+                  : 'Start by adding your first note, link, snippet, or shortcut. It will sync instantly across all your devices.'}
+              </p>
+              {!search.trim() && (
+                <button
+                  type="button"
+                  onClick={() => openNewItem('text')}
+                  className="mt-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-400 to-teal-400 text-slate-950 font-bold text-xs shadow-[0_4px_20px_rgba(56,189,248,0.35)] active:scale-95 hover:brightness-110 transition-all flex items-center gap-1.5"
+                >
+                  <span>+</span>
+                  <span>Create Your First Clip</span>
+                </button>
+              )}
+            </div>
+          </div>
         ) : (
           visible.map((item) => (
             <ItemCard
@@ -259,19 +318,20 @@ export function Dashboard({
         )}
       </section>
 
-      {/* Floating Action Button (+) */}
+      {/* Prominent High-End Floating Action Button (+) */}
       <button
-        onClick={() => setEditing('new')}
+        onClick={() => openNewItem('text')}
         aria-label="Add new item"
-        className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-4 sm:right-6 w-13 h-13 sm:w-14 sm:h-14 rounded-full text-2xl flex items-center justify-center shadow-xl active:scale-90 transition-transform z-40 bg-sky-500/25 text-sky-200 border border-sky-400/40 glass glass-strong"
+        className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-5 sm:right-8 w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-400 via-sky-500 to-teal-400 text-slate-950 font-black text-2xl shadow-[0_10px_35px_rgba(56,189,248,0.55)] flex items-center justify-center active:scale-90 hover:scale-105 transition-all z-40 border border-white/30"
       >
-        +
+        <span className="leading-none select-none">+</span>
       </button>
 
-      {/* Item Editor Dialog / Bottom Sheet */}
+      {/* Item Editor Drawer/Modal */}
       {editing && (
         <ItemEditor
           item={editing === 'new' ? null : editing}
+          initialType={editingType}
           categories={categories}
           collections={collections}
           onSave={handleSave}
@@ -279,7 +339,7 @@ export function Dashboard({
         />
       )}
 
-      {/* Access Code Modal */}
+      {/* Access Code Panel */}
       {showCodes && (
         <AccessCodePanel categories={categories} onClose={() => setShowCodes(false)} />
       )}
