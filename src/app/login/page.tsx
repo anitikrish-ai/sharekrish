@@ -26,13 +26,13 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-dvh flex items-center justify-center p-6">
-      <div className="glass glass-strong w-full max-w-sm p-8 animate-rise-in">
-        <h1 className="text-xl font-semibold tracking-tight mb-1">Cloud Clipboard</h1>
-        <p className="text-sm text-white/60 mb-6">Sign in with your owner email to manage your clipboard.</p>
+    <main className="min-h-dvh flex items-center justify-center p-4 sm:p-6">
+      <div className="glass glass-strong w-full max-w-sm p-6 sm:p-8 animate-scale-pop">
+        <h1 className="text-xl font-semibold tracking-tight mb-1 text-white/95">Cloud Clipboard</h1>
+        <p className="text-xs sm:text-sm text-white/60 mb-6">Sign in with your owner email to manage your clipboard.</p>
 
         {status === 'sent' ? (
-          <p className="text-sm text-sky-300 bg-sky-400/10 border border-sky-400/20 rounded-xl p-3">
+          <p className="text-xs sm:text-sm text-sky-300 bg-sky-400/10 border border-sky-400/20 rounded-xl p-3.5 animate-fade-in">
             Check <strong>{email}</strong> for a sign-in link.
           </p>
         ) : (
@@ -47,12 +47,12 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full rounded-xl bg-black/30 border border-white/15 px-4 py-3 text-sm outline-none focus-visible:border-sky-400/60 placeholder:text-white/35"
+              className="w-full rounded-xl bg-black/40 border border-white/15 px-4 py-3 text-base sm:text-sm outline-none focus-visible:border-sky-400/60 placeholder:text-white/35"
             />
             <button
               type="submit"
               disabled={status === 'sending'}
-              className="glass glass-interactive w-full rounded-xl px-4 py-3 text-sm font-medium disabled:opacity-50"
+              className="glass glass-interactive w-full rounded-xl px-4 py-3 text-xs sm:text-sm font-semibold text-sky-100 bg-sky-500/20 border-sky-400/30 active:scale-95 transition-all disabled:opacity-50"
             >
               {status === 'sending' ? 'Sending link…' : 'Send sign-in link'}
             </button>

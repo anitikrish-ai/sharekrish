@@ -16,7 +16,7 @@ export function ItemEditor({
   onSave,
   onClose,
 }: {
-  item: ClipItem | null // null = creating new
+  item: ClipItem | null
   categories: Category[]
   collections: Collection[]
   onSave: (input: ItemInput) => Promise<void>
@@ -34,7 +34,6 @@ export function ItemEditor({
   const dialogRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    dialogRef.current?.querySelector<HTMLElement>('input, textarea, select')?.focus()
     function onKey(e: KeyboardEvent) {
       if (e.key === 'Escape') onClose()
     }
@@ -50,7 +49,7 @@ export function ItemEditor({
       return
     }
     if (!URL_TYPES.includes(type) && !content.trim()) {
-      setError('Content can’t be empty.')
+      setError('Content cannot be empty.')
       return
     }
     setSaving(true)
@@ -73,20 +72,36 @@ export function ItemEditor({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 p-0 sm:p-6" role="dialog" aria-modal>
+    <div
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs p-0 sm:p-4 animate-fade-in"
+      role="dialog"
+      aria-modal
+    >
       <Glass
         strong
-        className="w-full sm:max-w-lg max-h-[90dvh] overflow-y-auto rounded-t-3xl sm:rounded-3xl p-6 animate-rise-in"
+        className="w-full sm:max-w-lg max-h-[88dvh] overflow-y-auto rounded-t-3xl sm:rounded-2xl p-5 sm:p-6 animate-sheet-up sm:animate-scale-pop shadow-2xl border-white/20 pb-[max(1.5rem,env(safe-area-inset-bottom))]"
       >
         <div ref={dialogRef}>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">{item ? 'Edit item' : 'New item'}</h2>
-            <button onClick={onClose} aria-label="Close" className="rounded-lg px-2 py-1 hover:bg-white/10">✕</button>
+          {/* Header */}
+          <div className="flex items-center justify-between mb-4 pb-2 border-b border-white/10">
+            <h2 className="text-base sm:text-lg font-semibold tracking-tight text-white/95">
+              {item ? 'Edit item' : 'New item'}
+            </h2>
+            <button
+              onClick={onClose}
+              aria-label="Close"
+              className="w-8 h-8 rounded-full flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 active:scale-90 transition-all"
+            >
+              ✕
+            </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3.5">
+            {/* Type selector */}
             <div>
-              <label className="block text-xs text-white/60 mb-1.5">Type</label>
+              <label className="block text-[11px] font-medium text-white/60 mb-1.5 uppercase tracking-wider">
+                Type
+              </label>
               <div className="flex flex-wrap gap-1.5">
                 {TYPES.map((t) => (
                   <button
@@ -94,10 +109,10 @@ export function ItemEditor({
                     key={t}
                     onClick={() => setType(t)}
                     aria-pressed={type === t}
-                    className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
+                    className={`text-xs px-3 py-1.5 rounded-full border transition-all active:scale-95 ${
                       type === t
-                        ? 'bg-sky-400/20 border-sky-400/50 text-sky-100'
-                        : 'border-white/15 text-white/60 hover:bg-white/5'
+                        ? 'bg-sky-400/25 border-sky-400/60 text-sky-100 font-medium'
+                        : 'border-white/10 text-white/60 hover:bg-white/5'
                     }`}
                   >
                     {TYPE_LABEL[t]}
@@ -106,104 +121,132 @@ export function ItemEditor({
               </div>
             </div>
 
+            {/* Title */}
             <div>
-              <label htmlFor="title" className="block text-xs text-white/60 mb-1.5">Title</label>
+              <label htmlFor="title" className="block text-[11px] font-medium text-white/60 mb-1">
+                Title
+              </label>
               <input
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Optional label"
-                className="w-full rounded-xl bg-black/30 border border-white/15 px-3 py-2 text-sm outline-none focus-visible:border-sky-400/60"
+                className="w-full rounded-xl bg-black/40 border border-white/15 px-3.5 py-2.5 text-base sm:text-sm outline-none focus-visible:border-sky-400/70 placeholder:text-white/30"
               />
             </div>
 
+            {/* URL */}
             {URL_TYPES.includes(type) ? (
               <div>
-                <label htmlFor="url" className="block text-xs text-white/60 mb-1.5">URL</label>
+                <label htmlFor="url" className="block text-[11px] font-medium text-white/60 mb-1">
+                  URL
+                </label>
                 <input
                   id="url"
                   type="url"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="https://…"
-                  className="w-full rounded-xl bg-black/30 border border-white/15 px-3 py-2 text-sm outline-none focus-visible:border-sky-400/60"
+                  className="w-full rounded-xl bg-black/40 border border-white/15 px-3.5 py-2.5 text-base sm:text-sm outline-none focus-visible:border-sky-400/70 placeholder:text-white/30"
                 />
               </div>
             ) : null}
 
+            {/* Content textarea */}
             <div>
-              <label htmlFor="content" className="block text-xs text-white/60 mb-1.5">
-                {type === 'snippet' ? 'Code' : type === 'shortcut' ? 'Command' : URL_TYPES.includes(type) ? 'Notes (optional)' : 'Content'}
+              <label htmlFor="content" className="block text-[11px] font-medium text-white/60 mb-1">
+                {type === 'snippet'
+                  ? 'Code snippet'
+                  : type === 'shortcut'
+                  ? 'Command'
+                  : URL_TYPES.includes(type)
+                  ? 'Notes (optional)'
+                  : 'Content'}
               </label>
               <textarea
                 id="content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                rows={type === 'snippet' ? 8 : 4}
-                className={`w-full rounded-xl bg-black/30 border border-white/15 px-3 py-2 text-sm outline-none focus-visible:border-sky-400/60 ${type === 'snippet' ? 'font-mono' : ''}`}
+                rows={type === 'snippet' ? 6 : 3}
+                placeholder="Enter text, link or snippet..."
+                className={`w-full rounded-xl bg-black/40 border border-white/15 px-3.5 py-2.5 text-base sm:text-sm outline-none focus-visible:border-sky-400/70 placeholder:text-white/30 ${
+                  type === 'snippet' ? 'font-mono text-xs' : ''
+                }`}
               />
             </div>
 
+            {/* Snippet Language */}
             {type === 'snippet' && (
               <div>
-                <label htmlFor="language" className="block text-xs text-white/60 mb-1.5">Language (optional)</label>
+                <label htmlFor="language" className="block text-[11px] font-medium text-white/60 mb-1">
+                  Language hint
+                </label>
                 <input
                   id="language"
                   value={language}
                   onChange={(e) => setLanguage(e.target.value)}
-                  placeholder="ts, python, bash…"
-                  className="w-full rounded-xl bg-black/30 border border-white/15 px-3 py-2 text-sm outline-none focus-visible:border-sky-400/60"
+                  placeholder="ts, python, bash, json…"
+                  className="w-full rounded-xl bg-black/40 border border-white/15 px-3.5 py-2 text-base sm:text-sm outline-none focus-visible:border-sky-400/70 placeholder:text-white/30"
                 />
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-3">
+            {/* Category and Collection */}
+            <div className="grid grid-cols-2 gap-2.5">
               <div>
-                <label htmlFor="category" className="block text-xs text-white/60 mb-1.5">Category</label>
+                <label htmlFor="category" className="block text-[11px] font-medium text-white/60 mb-1">
+                  Category
+                </label>
                 <select
                   id="category"
                   value={categoryId}
                   onChange={(e) => setCategoryId(e.target.value)}
-                  className="w-full rounded-xl bg-black/30 border border-white/15 px-3 py-2 text-sm outline-none focus-visible:border-sky-400/60"
+                  className="w-full rounded-xl bg-black/40 border border-white/15 px-3 py-2 text-base sm:text-sm outline-none focus-visible:border-sky-400/70"
                 >
-                  <option value="">None</option>
+                  <option value="" className="bg-slate-900">None</option>
                   {categories.map((c) => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
+                    <option key={c.id} value={c.id} className="bg-slate-900">{c.name}</option>
                   ))}
                 </select>
               </div>
               <div>
-                <label htmlFor="collection" className="block text-xs text-white/60 mb-1.5">Collection</label>
+                <label htmlFor="collection" className="block text-[11px] font-medium text-white/60 mb-1">
+                  Collection
+                </label>
                 <select
                   id="collection"
                   value={collectionId}
                   onChange={(e) => setCollectionId(e.target.value)}
-                  className="w-full rounded-xl bg-black/30 border border-white/15 px-3 py-2 text-sm outline-none focus-visible:border-sky-400/60"
+                  className="w-full rounded-xl bg-black/40 border border-white/15 px-3 py-2 text-base sm:text-sm outline-none focus-visible:border-sky-400/70"
                 >
-                  <option value="">None</option>
+                  <option value="" className="bg-slate-900">None</option>
                   {collections.map((c) => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
+                    <option key={c.id} value={c.id} className="bg-slate-900">{c.name}</option>
                   ))}
                 </select>
               </div>
             </div>
 
-            {error && <p role="alert" className="text-sm text-rose-300">{error}</p>}
+            {error && (
+              <p role="alert" className="text-xs text-rose-300 bg-rose-500/10 border border-rose-400/20 rounded-lg p-2.5">
+                {error}
+              </p>
+            )}
 
-            <div className="flex gap-2 pt-2">
+            <div className="flex gap-2.5 pt-2">
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 rounded-xl px-4 py-2.5 text-sm border border-white/15 hover:bg-white/5"
+                className="flex-1 rounded-xl px-4 py-2.5 text-xs sm:text-sm border border-white/15 text-white/70 hover:bg-white/5 active:scale-95 transition-all"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="flex-1 glass glass-interactive rounded-xl px-4 py-2.5 text-sm font-medium disabled:opacity-50"
+                className="flex-1 glass glass-interactive rounded-xl px-4 py-2.5 text-xs sm:text-sm font-semibold text-sky-100 bg-sky-500/20 border-sky-400/40 active:scale-95 transition-all disabled:opacity-50"
               >
-                {saving ? 'Saving…' : 'Save'}
+                {saving ? 'Saving…' : 'Save item'}
               </button>
             </div>
           </form>

@@ -139,22 +139,25 @@ export function Dashboard({
   const quickPool = useMemo(() => items.filter((i) => !i.is_archived), [items])
 
   return (
-    <div className="min-h-dvh max-w-3xl mx-auto px-4 sm:px-6 py-6 pb-28">
-      <header className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-lg font-semibold tracking-tight">Cloud Clipboard</h1>
-          <p className="text-xs text-white/45">{userEmail}</p>
+    <div className="min-h-dvh max-w-3xl mx-auto px-3.5 sm:px-6 py-4 sm:py-6 pb-28">
+      {/* App Header */}
+      <header className="flex items-center justify-between mb-5 pt-1">
+        <div className="min-w-0 pr-2">
+          <h1 className="text-base sm:text-lg font-semibold tracking-tight text-white/95 truncate">
+            Cloud Clipboard
+          </h1>
+          <p className="text-[11px] sm:text-xs text-white/45 truncate">{userEmail}</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
           <button
             onClick={() => setShowCodes(true)}
-            className="glass glass-interactive rounded-full px-3 py-2 text-xs"
+            className="glass glass-interactive rounded-full px-3 py-1.5 sm:py-2 text-xs font-medium text-white/85"
           >
             Share
           </button>
           <button
             onClick={handleSignOut}
-            className="rounded-full px-3 py-2 text-xs text-white/50 hover:bg-white/5"
+            className="rounded-full px-2.5 py-1.5 sm:py-2 text-xs text-white/45 hover:text-white/80 hover:bg-white/5 active:scale-95 transition-all"
           >
             Sign out
           </button>
@@ -162,33 +165,48 @@ export function Dashboard({
       </header>
 
       {syncError && (
-        <Glass className="mb-4 px-3 py-2 text-xs text-amber-200 border-amber-300/20">{syncError}</Glass>
+        <Glass className="mb-4 px-3.5 py-2.5 text-xs text-amber-200 border-amber-300/25 bg-amber-500/10 animate-fade-in">
+          {syncError}
+        </Glass>
       )}
 
-      <section className="mb-6">
-        <h2 className="text-xs uppercase tracking-wide text-white/40 mb-2">Quick access</h2>
+      {/* Quick Access */}
+      <section className="mb-5">
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="text-[11px] uppercase tracking-wider font-semibold text-white/40">
+            Quick Access
+          </h2>
+          <span className="text-[10px] text-white/35">Tap to copy</span>
+        </div>
         <QuickGrid items={quickPool} />
       </section>
 
-      <section className="mb-4">
+      {/* Search Input */}
+      <section className="mb-3.5">
         <SearchBar value={search} onChange={setSearch} />
       </section>
 
-      <section className="mb-4 flex flex-wrap items-center gap-2">
-        {(['all', 'favorites', 'pinned', 'recent', 'archive'] as Filter[]).map((f) => (
-          <button
-            key={f}
-            onClick={() => setFilter(f)}
-            aria-pressed={filter === f}
-            className={`text-xs px-3 py-1.5 rounded-full border capitalize ${
-              filter === f ? 'bg-white/15 border-white/30' : 'border-white/15 text-white/55 hover:bg-white/5'
-            }`}
-          >
-            {f}
-          </button>
-        ))}
+      {/* Filter Tabs - horizontally scrollable without breaking on phone */}
+      <section className="mb-3.5 overflow-x-auto no-scrollbar -mx-3.5 px-3.5 sm:mx-0 sm:px-0">
+        <div className="flex items-center gap-1.5 min-w-max pb-0.5">
+          {(['all', 'favorites', 'pinned', 'recent', 'archive'] as Filter[]).map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              aria-pressed={filter === f}
+              className={`text-xs px-3 py-1.5 rounded-full border capitalize transition-all active:scale-95 ${
+                filter === f
+                  ? 'bg-sky-400/20 border-sky-400/40 text-sky-100 font-medium'
+                  : 'border-white/10 text-white/55 hover:bg-white/5 hover:text-white/80'
+              }`}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
       </section>
 
+      {/* Category Chips - mobile wrap */}
       <section className="mb-2">
         <CategoryChips
           categories={categories}
@@ -201,10 +219,14 @@ export function Dashboard({
         />
       </section>
 
+      {/* Collections Row */}
       {collections.length > 0 && (
-        <section className="mb-5 flex flex-wrap gap-1.5">
+        <section className="mb-4 flex flex-wrap items-center gap-1.5">
           {collections.map((c) => (
-            <span key={c.id} className="text-[11px] px-2.5 py-1 rounded-full border border-white/10 text-white/45">
+            <span
+              key={c.id}
+              className="text-[11px] px-2.5 py-1 rounded-full border border-white/10 text-white/45 bg-white/[0.02]"
+            >
               {c.name}
             </span>
           ))}
@@ -216,21 +238,12 @@ export function Dashboard({
           />
         </section>
       )}
-      {collections.length === 0 && (
-        <section className="mb-5">
-          <NewCollectionButton
-            onCreate={async (name) => {
-              const c = await createCollection(supabase, userId, name)
-              setCollections((prev) => [...prev, c])
-            }}
-          />
-        </section>
-      )}
 
-      <section className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {/* Main Items Grid */}
+      <section className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
         {visible.length === 0 ? (
-          <Glass className="col-span-full p-8 text-center text-sm text-white/45">
-            Nothing here yet.
+          <Glass className="col-span-full p-8 text-center text-sm text-white/40">
+            {search.trim() ? 'No items match your search.' : 'Nothing here yet. Tap + to add an item.'}
           </Glass>
         ) : (
           visible.map((item) => (
@@ -246,14 +259,16 @@ export function Dashboard({
         )}
       </section>
 
+      {/* Floating Action Button (+) */}
       <button
         onClick={() => setEditing('new')}
         aria-label="Add new item"
-        className="glass glass-strong glass-interactive fixed bottom-6 right-6 w-14 h-14 rounded-full text-2xl flex items-center justify-center shadow-glass"
+        className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-4 sm:right-6 w-13 h-13 sm:w-14 sm:h-14 rounded-full text-2xl flex items-center justify-center shadow-xl active:scale-90 transition-transform z-40 bg-sky-500/25 text-sky-200 border border-sky-400/40 glass glass-strong"
       >
         +
       </button>
 
+      {/* Item Editor Dialog / Bottom Sheet */}
       {editing && (
         <ItemEditor
           item={editing === 'new' ? null : editing}
@@ -264,6 +279,7 @@ export function Dashboard({
         />
       )}
 
+      {/* Access Code Modal */}
       {showCodes && (
         <AccessCodePanel categories={categories} onClose={() => setShowCodes(false)} />
       )}

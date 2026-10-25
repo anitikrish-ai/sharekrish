@@ -22,11 +22,15 @@ const config: Config = {
       },
       keyframes: {
         'fade-in': { from: { opacity: '0' }, to: { opacity: '1' } },
-        'rise-in': { from: { opacity: '0', transform: 'translateY(6px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+        'fade-up': { from: { opacity: '0', transform: 'translateY(10px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+        'scale-pop': { '0%': { transform: 'scale(0.94)', opacity: '0' }, '70%': { transform: 'scale(1.02)' }, '100%': { transform: 'scale(1)', opacity: '1' } },
+        'sheet-up': { from: { transform: 'translateY(100%)', opacity: '0' }, to: { transform: 'translateY(0)', opacity: '1' } },
       },
       animation: {
-        'fade-in': 'fade-in 160ms ease-out',
-        'rise-in': 'rise-in 180ms cubic-bezier(.2,.8,.2,1)',
+        'fade-in': 'fade-in 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+        'fade-up': 'fade-up 220ms cubic-bezier(0.16, 1, 0.3, 1)',
+        'scale-pop': 'scale-pop 200ms cubic-bezier(0.16, 1, 0.3, 1)',
+        'sheet-up': 'sheet-up 260ms cubic-bezier(0.16, 1, 0.3, 1)',
       },
     },
   },

@@ -124,19 +124,19 @@ export default function GuestViewPage() {
     : state.items
 
   return (
-    <div className="min-h-dvh max-w-3xl mx-auto px-4 sm:px-6 py-6">
-      <header className="flex items-center justify-between mb-6">
-        <h1 className="text-lg font-semibold tracking-tight">Shared clipboard</h1>
+    <div className="min-h-dvh max-w-3xl mx-auto px-3.5 sm:px-6 py-4 sm:py-6 pb-12">
+      <header className="flex items-center justify-between mb-5 pt-1">
+        <h1 className="text-base sm:text-lg font-semibold tracking-tight text-white/95">Shared clipboard</h1>
         <Glass className="px-3 py-1.5 text-xs text-white/60">
           {minsLeft}m {secsLeft}s left · read-only
         </Glass>
       </header>
 
-      <section className="mb-5">
+      <section className="mb-4">
         <SearchBar value={search} onChange={setSearch} />
       </section>
 
-      <section className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <section className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
         {visible.length === 0 ? (
           <Glass className="col-span-full p-8 text-center text-sm text-white/45">Nothing shared here.</Glass>
         ) : (
