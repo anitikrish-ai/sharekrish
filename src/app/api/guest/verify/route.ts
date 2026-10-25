@@ -4,6 +4,8 @@ import { signGuestToken, GUEST_COOKIE_NAME } from '@/lib/guestSession'
 
 const GUEST_SESSION_MINUTES = 30 // how long a *redeemed* session lasts, separate from the code's own TTL
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   const { code } = await request.json().catch(() => ({ code: '' }))
   if (typeof code !== 'string' || !code.trim()) {

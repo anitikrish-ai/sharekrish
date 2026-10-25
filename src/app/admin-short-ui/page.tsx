@@ -9,6 +9,8 @@ import type { Category, ClipItem, Collection } from '@/lib/types'
 // boundary, since it also covers the admin API routes), and this
 // server-side check is the belt-and-suspenders fallback plus the source of
 // the initial data fetch. Never trust a client-only redirect here.
+export const dynamic = 'force-dynamic'
+
 export default async function AdminPage() {
   const supabase = createServerSupabaseClient()
   const { data: { user } } = await supabase.auth.getUser()

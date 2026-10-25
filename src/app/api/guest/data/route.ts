@@ -6,6 +6,8 @@ import { verifyGuestToken, GUEST_COOKIE_NAME } from '@/lib/guestSession'
 // cookie (expiry) AND re-checks guest_sessions.revoked in the database, so
 // a revoke from the owner's dashboard takes effect on the guest's very
 // next request — the cookie alone being "not expired yet" isn't enough.
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   const payload = verifyGuestToken(request.cookies.get(GUEST_COOKIE_NAME)?.value)
   if (!payload) {

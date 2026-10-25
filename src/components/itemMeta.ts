@@ -23,21 +23,21 @@ export const TYPE_LABEL: Record<ItemType, string> = {
 export function renderTypeIcon(type: ItemType, size = 18, className = ''): React.ReactElement {
   switch (type) {
     case 'text':
-      return <IconFileText size={size} className={className} />
+      return React.createElement(IconFileText, { size, className })
     case 'link':
-      return <IconLink size={size} className={className} />
+      return React.createElement(IconLink, { size, className })
     case 'snippet':
-      return <IconCode size={size} className={className} />
+      return React.createElement(IconCode, { size, className })
     case 'shortcut':
-      return <IconZap size={size} className={className} />
+      return React.createElement(IconZap, { size, className })
     case 'image':
-      return <IconImage size={size} className={className} />
+      return React.createElement(IconImage, { size, className })
     case 'video':
-      return <IconVideo size={size} className={className} />
+      return React.createElement(IconVideo, { size, className })
     case 'music':
-      return <IconMusic size={size} className={className} />
+      return React.createElement(IconMusic, { size, className })
     default:
-      return <IconFileText size={size} className={className} />
+      return React.createElement(IconFileText, { size, className })
   }
 }
 

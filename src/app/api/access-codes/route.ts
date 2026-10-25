@@ -23,6 +23,8 @@ function generateCode(): string {
   return String(randomInt(0, 1_000_000)).padStart(6, '0')
 }
 
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   const user = await requireOwner()
   if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
