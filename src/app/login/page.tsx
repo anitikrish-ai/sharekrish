@@ -38,12 +38,10 @@ export default function LoginPage() {
   return (
     <main className="min-h-dvh flex items-center justify-center p-4 sm:p-6">
       <div className="glass glass-strong w-full max-w-sm p-6 sm:p-8 animate-scale-pop relative overflow-hidden">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-400 via-sky-500 to-teal-400 p-[1px] shadow-[0_0_25px_rgba(56,189,248,0.35)] mb-4">
-          <div className="w-full h-full rounded-2xl bg-[#090d16] flex items-center justify-center">
-            <IconClipboard size={22} className="text-sky-400" strokeWidth={2.2} />
-          </div>
+        <div className="w-12 h-12 rounded-md bg-[#0066cc] mb-4 flex items-center justify-center">
+          <IconClipboard size={22} className="text-white" strokeWidth={2.2} />
         </div>
-        <h1 className="text-xl font-bold tracking-tight mb-1 text-white">Cloud Clipboard</h1>
+        <h1 className="text-xl font-semibold tracking-tight mb-1 text-white">Cloud Clipboard</h1>
         <p className="text-xs sm:text-sm text-white/55 mb-6">Sign in with your owner email to access your clips.</p>
 
         {status === 'sent' ? (
@@ -62,12 +60,12 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full rounded-xl bg-black/40 border border-white/15 px-4 py-3 text-base sm:text-sm outline-none focus-visible:border-sky-400/60 placeholder:text-white/35"
+              className="w-full rounded-xl bg-black/40 border border-white/15 px-4 py-3 text-base sm:text-sm outline-none focus-visible:border-[#2997ff]/60 placeholder:text-white/35"
             />
             <button
               type="submit"
               disabled={status === 'sending'}
-              className="glass glass-interactive w-full rounded-xl px-4 py-3 text-xs sm:text-sm font-semibold text-sky-100 bg-sky-500/20 border-sky-400/30 active:scale-95 transition-all disabled:opacity-50"
+              className="btn-primary w-full text-center disabled:opacity-50"
             >
               {status === 'sending' ? 'Sending link…' : 'Send sign-in link'}
             </button>

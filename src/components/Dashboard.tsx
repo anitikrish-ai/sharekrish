@@ -264,14 +264,12 @@ export function Dashboard({
       {/* Brand Header */}
       <header className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-sky-400 via-sky-500 to-teal-400 p-[1px] shadow-[0_0_20px_rgba(56,189,248,0.35)] flex-shrink-0">
-            <div className="w-full h-full rounded-2xl bg-[#090d16] flex items-center justify-center text-sky-400">
-              <IconClipboard size={20} strokeWidth={2.2} />
-            </div>
+          <div className="w-10 h-10 rounded-sm bg-[#0066cc] flex items-center justify-center text-white flex-shrink-0">
+            <IconClipboard size={20} strokeWidth={2.2} />
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h1 className="text-base sm:text-lg font-bold tracking-tight text-white">
+              <h1 className="text-base sm:text-lg font-semibold tracking-tight text-white">
                 Cloud Clipboard
               </h1>
               <span className="inline-flex items-center gap-1.5 text-[10px] text-emerald-400 font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
@@ -294,7 +292,7 @@ export function Dashboard({
             aria-pressed={easyMode}
             className={`rounded-xl px-2.5 sm:px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5 transition-all active:scale-95 border ${
               easyMode
-                ? 'bg-amber-400/15 border-amber-400/40 text-amber-300 shadow-[0_0_15px_rgba(251,191,36,0.15)]'
+                ? 'bg-amber-400/15 border-amber-400/40 text-amber-300'
                 : 'glass text-slate-400 hover:text-white border-white/[0.08]'
             }`}
             title="Toggle Easy Mode (instant Enter-to-save)"
@@ -308,9 +306,9 @@ export function Dashboard({
 
           <button
             onClick={() => setShowCodes(true)}
-            className="glass glass-interactive rounded-xl px-3 py-1.5 text-xs font-semibold text-slate-200 border-white/[0.1] hover:border-sky-400/40 flex items-center gap-1.5 shadow-sm"
+            className="glass glass-interactive rounded-xl px-3 py-1.5 text-xs font-semibold text-slate-200 border-white/[0.1] hover:border-[#2997ff]/40 flex items-center gap-1.5 shadow-sm"
           >
-            <IconShare size={13} className="text-sky-400" />
+            <IconShare size={13} className="text-[#2997ff]" />
             <span className="hidden sm:inline">Share</span>
           </button>
           <button
@@ -337,7 +335,7 @@ export function Dashboard({
               value={easyInput}
               onChange={(e) => setEasyInput(e.target.value)}
               placeholder="Easy Mode: Type or paste & hit Enter to save…"
-              className="w-full rounded-2xl bg-black/50 border border-amber-400/35 pl-10 pr-24 py-3 text-sm text-slate-100 placeholder:text-slate-500 outline-none focus:border-amber-400/70 focus:shadow-[0_0_25px_rgba(251,191,36,0.2)] transition-all"
+              className="w-full rounded-2xl bg-black/50 border border-amber-400/35 pl-10 pr-24 py-3 text-sm text-slate-100 placeholder:text-slate-500 outline-none focus:border-amber-400/70 focus: transition-all"
             />
             <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
               <span className="hidden sm:inline-flex items-center gap-1 text-[10px] text-amber-300/80 font-mono bg-amber-400/10 px-2 py-1 rounded-lg border border-amber-400/20">
@@ -348,7 +346,7 @@ export function Dashboard({
                 type="submit"
                 disabled={!easyInput.trim() || easySaving}
                 aria-label="Save item instantly"
-                className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 text-xs font-bold shadow-sm active:scale-95 disabled:opacity-40 transition-all flex items-center gap-1"
+                className="px-3 py-1.5 rounded-xl text-slate-950 text-xs font-semibold shadow-sm active:scale-95 disabled:opacity-40 transition-all flex items-center gap-1"
               >
                 <span>Save</span>
                 <IconCornerDownLeft size={12} strokeWidth={2.5} />
@@ -356,7 +354,7 @@ export function Dashboard({
             </div>
           </form>
           {easyToast && (
-            <p className="mt-2 text-xs text-emerald-400 flex items-center gap-1.5 animate-fade-in font-medium px-2">
+            <p className="mt-2 text-xs text-emerald-400 flex items-center gap-1.5 animate-fade-in font-semibold px-2">
               <IconCheck size={13} strokeWidth={2.5} />
               <span>{easyToast}</span>
             </p>
@@ -375,7 +373,7 @@ export function Dashboard({
       {/* Quick Access Section */}
       <section className="mb-6">
         <div className="flex items-center justify-between mb-2.5">
-          <h2 className="text-[11px] uppercase tracking-wider font-bold text-slate-400 flex items-center gap-1.5">
+          <h2 className="text-[11px] uppercase tracking-wider font-semibold text-slate-400 flex items-center gap-1.5">
             <IconZap size={13} className="text-amber-400" />
             <span>Quick Access</span>
           </h2>
@@ -401,11 +399,11 @@ export function Dashboard({
                 aria-pressed={isActive}
                 className={`text-xs px-3.5 py-2 rounded-xl border transition-all active:scale-95 flex items-center gap-1.5 ${
                   isActive
-                    ? 'bg-sky-500/20 border-sky-400/50 text-sky-100 font-semibold shadow-[0_0_15px_rgba(56,189,248,0.2)]'
+                    ? 'bg-[#0066cc]/20 border-[#2997ff]/50 text-[#2997ff] font-semibold'
                     : 'glass text-slate-400 hover:text-white hover:border-white/[0.18]'
                 }`}
               >
-                <IconComponent size={13} className={isActive ? 'text-sky-300' : 'text-slate-400'} />
+                <IconComponent size={13} className={isActive ? 'text-[#2997ff]' : 'text-slate-400'} />
                 <span>{label}</span>
               </button>
             )
@@ -452,7 +450,7 @@ export function Dashboard({
         {visible.length === 0 ? (
           <div className="col-span-full">
             <div className="glass p-8 sm:p-10 text-center flex flex-col items-center justify-center gap-3 border-white/[0.08] relative overflow-hidden">
-              <div className="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-400/20 flex items-center justify-center text-sky-400 mb-1 shadow-[0_0_30px_rgba(56,189,248,0.15)]">
+              <div className="w-14 h-14 rounded-2xl bg-[#0066cc]/10 border border-[#2997ff]/20 flex items-center justify-center text-[#2997ff] mb-1">
                 <IconSparkles size={26} strokeWidth={1.8} />
               </div>
               <h3 className="text-base font-semibold text-white">
@@ -467,7 +465,7 @@ export function Dashboard({
                 <button
                   type="button"
                   onClick={() => openNewItem('text')}
-                  className="mt-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-400 to-teal-400 text-slate-950 font-bold text-xs shadow-[0_4px_20px_rgba(56,189,248,0.35)] active:scale-95 hover:brightness-110 transition-all flex items-center gap-1.5"
+                  className="mt-2 px-5 py-2.5 rounded-xl text-slate-950 font-semibold text-xs active:scale-95 hover:brightness-110 transition-all flex items-center gap-1.5"
                 >
                   <IconPlus size={14} strokeWidth={2.5} />
                   <span>Create Your First Clip</span>
@@ -500,7 +498,7 @@ export function Dashboard({
           }
         }}
         aria-label="Add new item"
-        className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-5 sm:right-8 w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-400 via-sky-500 to-teal-400 text-slate-950 shadow-[0_10px_35px_rgba(56,189,248,0.55)] flex items-center justify-center active:scale-90 hover:scale-105 transition-all z-40 border border-white/30"
+        className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-5 sm:right-8 w-14 h-14 rounded-pill bg-[#0066cc] text-white flex items-center justify-center active:scale-95 transition-transform z-40"
       >
         <IconPlus size={24} strokeWidth={2.8} />
       </button>

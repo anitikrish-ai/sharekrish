@@ -27,19 +27,19 @@ export function QuickGrid({
         <button
           type="button"
           onClick={() => onQuickCreate?.('text')}
-          className="glass glass-interactive h-20 sm:h-22 rounded-2xl flex flex-col items-center justify-center gap-1.5 p-2 text-center group border-white/[0.08] hover:border-sky-400/40"
+          className="glass glass-interactive h-20 sm:h-22 rounded-2xl flex flex-col items-center justify-center gap-1.5 p-2 text-center group border-white/[0.08] hover:border-[#2997ff]/40"
         >
-          <IconFileText size={20} className="text-sky-400 group-hover:scale-110 transition-transform" />
-          <span className="text-[11px] font-medium text-slate-300 group-hover:text-sky-300">New Note</span>
+          <IconFileText size={20} className="text-[#2997ff] group-hover:scale-110 transition-transform" />
+          <span className="text-[11px] font-semibold text-slate-300 group-hover:text-[#2997ff]">New Note</span>
         </button>
 
         <button
           type="button"
           onClick={() => onQuickCreate?.('link')}
-          className="glass glass-interactive h-20 sm:h-22 rounded-2xl flex flex-col items-center justify-center gap-1.5 p-2 text-center group border-white/[0.08] hover:border-teal-400/40"
+          className="glass glass-interactive h-20 sm:h-22 rounded-2xl flex flex-col items-center justify-center gap-1.5 p-2 text-center group border-white/[0.08] hover:border-[#2997ff]/40"
         >
-          <IconLink size={20} className="text-teal-400 group-hover:scale-110 transition-transform" />
-          <span className="text-[11px] font-medium text-slate-300 group-hover:text-teal-300">Save Link</span>
+          <IconLink size={20} className="text-[#2997ff] group-hover:scale-110 transition-transform" />
+          <span className="text-[11px] font-semibold text-slate-300 group-hover:text-teal-300">Save Link</span>
         </button>
 
         <button
@@ -48,7 +48,7 @@ export function QuickGrid({
           className="glass glass-interactive h-20 sm:h-22 rounded-2xl flex flex-col items-center justify-center gap-1.5 p-2 text-center group border-white/[0.08] hover:border-amber-400/40"
         >
           <IconCode size={20} className="text-amber-400 group-hover:scale-110 transition-transform" />
-          <span className="text-[11px] font-medium text-slate-300 group-hover:text-amber-300">Snippet</span>
+          <span className="text-[11px] font-semibold text-slate-300 group-hover:text-amber-300">Snippet</span>
         </button>
       </div>
     )
@@ -79,21 +79,21 @@ function QuickTile({ item }: { item: ClipItem }) {
       }}
       className={`h-20 sm:h-22 flex flex-col items-center justify-center gap-1.5 p-2 text-center transition-all relative overflow-hidden ${
         copied
-          ? 'border-emerald-400/50 bg-emerald-500/20 shadow-[0_0_20px_rgba(52,211,153,0.25)]'
-          : 'hover:border-sky-400/35 border-white/[0.08]'
+          ? 'border-emerald-400/50 bg-emerald-500/20'
+          : 'hover:border-[#2997ff]/35 border-white/[0.08]'
       }`}
       aria-label={`Copy ${item.title || item.type}`}
     >
       <span
         className={`transition-transform flex items-center justify-center ${
-          copied ? 'text-emerald-400 scale-125' : 'text-sky-400'
+          copied ? 'text-emerald-400 scale-125' : 'text-[#2997ff]'
         }`}
         aria-hidden
       >
         {copied ? <IconCheck size={20} strokeWidth={2.5} /> : renderTypeIcon(item.type, 20)}
       </span>
       <span
-        className={`text-[11px] truncate w-full px-1 font-medium ${
+        className={`text-[11px] truncate w-full px-1 font-semibold ${
           copied ? 'text-emerald-200 font-semibold' : 'text-slate-200'
         }`}
       >

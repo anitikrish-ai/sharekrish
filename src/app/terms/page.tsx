@@ -7,9 +7,9 @@ export default function TermsPage() {
   return (
     <main className="min-h-dvh max-w-2xl mx-auto px-4 sm:px-6 py-12">
       <div className="glass p-6 sm:p-8 space-y-5 animate-scale-pop">
-        <div className="flex items-center gap-2.5 text-sky-400">
+        <div className="flex items-center gap-2.5 text-[#2997ff]">
           <IconFileText size={22} />
-          <h1 className="text-xl font-bold tracking-tight text-white">Terms &amp; Conditions</h1>
+          <h1 className="text-xl font-semibold tracking-tight text-white">Terms &amp; Conditions</h1>
         </div>
         <p className="text-xs text-slate-400">Last updated: October 25, 2026</p>
 
@@ -40,7 +40,7 @@ export default function TermsPage() {
         <div className="pt-4 border-t border-white/[0.08]">
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-400 hover:text-sky-300 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#2997ff] hover:text-[#2997ff] transition-colors"
           >
             <IconArrowLeft size={14} />
             <span>Back to Dashboard</span>

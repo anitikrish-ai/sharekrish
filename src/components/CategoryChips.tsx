@@ -50,7 +50,7 @@ export function CategoryChips({
               onChange={(e) => setName(e.target.value)}
               onBlur={() => !name && setAdding(false)}
               placeholder="Category name…"
-              className="text-xs bg-slate-900 border border-sky-400/50 text-white rounded-full px-3 py-1.5 outline-none w-32 shadow-[0_0_15px_rgba(56,189,248,0.2)]"
+              className="text-xs bg-slate-900 border border-[#2997ff]/50 text-white rounded-full px-3 py-1.5 outline-none w-32"
             />
           </form>
         ) : (
@@ -83,7 +83,7 @@ function Chip({
       aria-pressed={active}
       className={`text-xs px-3.5 py-1.5 rounded-full border transition-all active:scale-95 flex items-center gap-1.5 ${
         active
-          ? 'bg-sky-500/15 border-sky-400/50 text-sky-200 font-medium shadow-[0_0_15px_rgba(56,189,248,0.2)]'
+          ? 'bg-[#0066cc]/15 border-[#2997ff]/50 text-[#2997ff] font-semibold'
           : 'border-white/10 text-white/60 hover:text-white/85 hover:bg-white/5'
       }`}
     >

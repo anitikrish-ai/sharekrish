@@ -41,7 +41,7 @@ export function NewCollectionButton({ onCreate }: { onCreate: (name: string) => 
         onChange={(e) => setName(e.target.value)}
         onBlur={() => !name && setAdding(false)}
         placeholder="Collection name…"
-        className="text-[11px] bg-slate-900 border border-sky-400/50 text-white rounded-xl px-2.5 py-1 outline-none w-28 shadow-[0_0_15px_rgba(56,189,248,0.2)]"
+        className="text-[11px] bg-slate-900 border border-[#2997ff]/50 text-white rounded-xl px-2.5 py-1 outline-none w-28"
       />
     </form>
   )

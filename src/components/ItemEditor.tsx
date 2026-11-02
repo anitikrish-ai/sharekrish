@@ -106,7 +106,7 @@ export function ItemEditor({
           <form onSubmit={handleSubmit} className="space-y-3.5">
             {/* Type selector */}
             <div>
-              <label className="block text-[11px] font-medium text-white/60 mb-1.5 uppercase tracking-wider">
+              <label className="block text-[11px] font-semibold text-white/60 mb-1.5 uppercase tracking-wider">
                 Type
               </label>
               <div className="flex flex-wrap gap-1.5">
@@ -118,7 +118,7 @@ export function ItemEditor({
                     aria-pressed={type === t}
                     className={`text-xs px-3 py-1.5 rounded-full border transition-all active:scale-95 ${
                       type === t
-                        ? 'bg-sky-400/25 border-sky-400/60 text-sky-100 font-medium'
+                        ? 'bg-[#2997ff]/25 border-[#2997ff]/60 text-[#2997ff] font-semibold'
                         : 'border-white/10 text-white/60 hover:bg-white/5'
                     }`}
                   >
@@ -130,7 +130,7 @@ export function ItemEditor({
 
             {/* Title */}
             <div>
-              <label htmlFor="title" className="block text-[11px] font-medium text-white/60 mb-1">
+              <label htmlFor="title" className="block text-[11px] font-semibold text-white/60 mb-1">
                 Title
               </label>
               <input
@@ -138,14 +138,14 @@ export function ItemEditor({
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Optional label"
-                className="w-full rounded-xl bg-black/40 border border-white/15 px-3.5 py-2.5 text-base sm:text-sm outline-none focus-visible:border-sky-400/70 placeholder:text-white/30"
+                className="w-full rounded-xl bg-black/40 border border-white/15 px-3.5 py-2.5 text-base sm:text-sm outline-none focus-visible:border-[#2997ff]/70 placeholder:text-white/30"
               />
             </div>
 
             {/* URL */}
             {URL_TYPES.includes(type) ? (
               <div>
-                <label htmlFor="url" className="block text-[11px] font-medium text-white/60 mb-1">
+                <label htmlFor="url" className="block text-[11px] font-semibold text-white/60 mb-1">
                   URL
                 </label>
                 <input
@@ -154,14 +154,14 @@ export function ItemEditor({
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="https://…"
-                  className="w-full rounded-xl bg-black/40 border border-white/15 px-3.5 py-2.5 text-base sm:text-sm outline-none focus-visible:border-sky-400/70 placeholder:text-white/30"
+                  className="w-full rounded-xl bg-black/40 border border-white/15 px-3.5 py-2.5 text-base sm:text-sm outline-none focus-visible:border-[#2997ff]/70 placeholder:text-white/30"
                 />
               </div>
             ) : null}
 
             {/* Content textarea */}
             <div>
-              <label htmlFor="content" className="block text-[11px] font-medium text-white/60 mb-1">
+              <label htmlFor="content" className="block text-[11px] font-semibold text-white/60 mb-1">
                 {type === 'snippet'
                   ? 'Code snippet'
                   : type === 'shortcut'
@@ -176,7 +176,7 @@ export function ItemEditor({
                 onChange={(e) => setContent(e.target.value)}
                 rows={type === 'snippet' ? 6 : 3}
                 placeholder="Enter text, link or snippet..."
-                className={`w-full rounded-xl bg-black/40 border border-white/15 px-3.5 py-2.5 text-base sm:text-sm outline-none focus-visible:border-sky-400/70 placeholder:text-white/30 ${
+                className={`w-full rounded-xl bg-black/40 border border-white/15 px-3.5 py-2.5 text-base sm:text-sm outline-none focus-visible:border-[#2997ff]/70 placeholder:text-white/30 ${
                   type === 'snippet' ? 'font-mono text-xs' : ''
                 }`}
               />
@@ -185,7 +185,7 @@ export function ItemEditor({
             {/* Snippet Language */}
             {type === 'snippet' && (
               <div>
-                <label htmlFor="language" className="block text-[11px] font-medium text-white/60 mb-1">
+                <label htmlFor="language" className="block text-[11px] font-semibold text-white/60 mb-1">
                   Language hint
                 </label>
                 <input
@@ -193,7 +193,7 @@ export function ItemEditor({
                   value={language}
                   onChange={(e) => setLanguage(e.target.value)}
                   placeholder="ts, python, bash, json…"
-                  className="w-full rounded-xl bg-black/40 border border-white/15 px-3.5 py-2 text-base sm:text-sm outline-none focus-visible:border-sky-400/70 placeholder:text-white/30"
+                  className="w-full rounded-xl bg-black/40 border border-white/15 px-3.5 py-2 text-base sm:text-sm outline-none focus-visible:border-[#2997ff]/70 placeholder:text-white/30"
                 />
               </div>
             )}
@@ -201,14 +201,14 @@ export function ItemEditor({
             {/* Category and Collection */}
             <div className="grid grid-cols-2 gap-2.5">
               <div>
-                <label htmlFor="category" className="block text-[11px] font-medium text-white/60 mb-1">
+                <label htmlFor="category" className="block text-[11px] font-semibold text-white/60 mb-1">
                   Category
                 </label>
                 <select
                   id="category"
                   value={categoryId}
                   onChange={(e) => setCategoryId(e.target.value)}
-                  className="w-full rounded-xl bg-black/40 border border-white/15 px-3 py-2 text-base sm:text-sm outline-none focus-visible:border-sky-400/70"
+                  className="w-full rounded-xl bg-black/40 border border-white/15 px-3 py-2 text-base sm:text-sm outline-none focus-visible:border-[#2997ff]/70"
                 >
                   <option value="" className="bg-slate-900">None</option>
                   {categories.map((c) => (
@@ -217,14 +217,14 @@ export function ItemEditor({
                 </select>
               </div>
               <div>
-                <label htmlFor="collection" className="block text-[11px] font-medium text-white/60 mb-1">
+                <label htmlFor="collection" className="block text-[11px] font-semibold text-white/60 mb-1">
                   Collection
                 </label>
                 <select
                   id="collection"
                   value={collectionId}
                   onChange={(e) => setCollectionId(e.target.value)}
-                  className="w-full rounded-xl bg-black/40 border border-white/15 px-3 py-2 text-base sm:text-sm outline-none focus-visible:border-sky-400/70"
+                  className="w-full rounded-xl bg-black/40 border border-white/15 px-3 py-2 text-base sm:text-sm outline-none focus-visible:border-[#2997ff]/70"
                 >
                   <option value="" className="bg-slate-900">None</option>
                   {collections.map((c) => (
@@ -251,7 +251,7 @@ export function ItemEditor({
               <button
                 type="submit"
                 disabled={saving}
-                className="flex-1 glass glass-interactive rounded-xl px-4 py-2.5 text-xs sm:text-sm font-semibold text-sky-100 bg-sky-500/20 border-sky-400/40 active:scale-95 transition-all disabled:opacity-50"
+                className="flex-1 glass glass-interactive rounded-xl px-4 py-2.5 text-xs sm:text-sm font-semibold text-[#2997ff] bg-[#0066cc]/20 border-[#2997ff]/40 active:scale-95 transition-all disabled:opacity-50"
               >
                 {saving ? 'Saving…' : 'Save item'}
               </button>

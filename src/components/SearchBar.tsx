@@ -5,11 +5,11 @@ import { IconSearch, IconX } from './Icons'
 export function SearchBar({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   return (
     <div className="relative group">
-      <div className="glass flex items-center gap-3 px-3.5 py-2.5 transition-all group-focus-within:border-sky-400/50 group-focus-within:shadow-[0_0_25px_rgba(56,189,248,0.15)]">
+      <div className="glass flex items-center gap-3 px-3.5 py-2.5 transition-all group-focus-within:border-[#2997ff]/50 group-focus-within:">
         <IconSearch
           size={16}
           strokeWidth={2.2}
-          className="text-sky-400/80 flex-shrink-0 transition-transform group-focus-within:scale-110"
+          className="text-[#2997ff]/80 flex-shrink-0 transition-transform group-focus-within:scale-110"
         />
 
         <input
